@@ -1,0 +1,113 @@
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from .models import *
+from django.views.generic import CreateView
+from django.contrib.auth import login, logout
+from .forms import * 
+from django.contrib.auth.views import LoginView
+
+
+def index(request):
+    products = Product.objects.all()
+    return render(request, 'index.html')
+# Create your views here.
+def all_products(request):
+    products = Product.objects.all()
+    return render(request, 'index.html', {'products':products})
+
+def product_individual(request, prodid):
+    product = Product.objects.get(id=prodid)
+    return render(request, 'product_individual.html', {'product':product})
+
+def item_price(self):
+	return self.product_id.price * self.quantity
+
+class UserSignupView(CreateView):
+    model = User
+    form_class = UserSignupForm
+    template_name = 'user_signup.html'
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('/')
+
+class UserLoginView(LoginView):
+    template_name='login.html'
+
+def logout_user(request):
+    logout(request)
+    return redirect("/")
+
+def feedback_form(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("/")
+    else:
+        form = FeedbackForm()
+    return render(request, 'feedback_form.html', {'form': form})
+
+
+
+def add_to_basket(request, prodid):
+    user = request.user
+    # is there a shopping basket for the user 
+    basket = Basket.objects.filter(user_id=user, is_active=True).first()
+    if basket is None:
+        # create a new one
+        Basket.objects.create(user_id = user)
+        basket = Basket.objects.filter(user_id=user, is_active=True).first()
+    # get the product 
+    product = Product.objects.get(id=prodid)
+    sbi = BasketItem.objects.filter(basket_id=basket, product_id = product).first()
+    if sbi is None:
+        # there is no basket item for that product 
+        # create one 
+        sbi = BasketItem(basket_id=basket, product_id = product)
+        sbi.save()
+    else:
+        # a basket item already exists 
+        # just add 1 to the quantity
+        sbi.quantity = sbi.quantity+1
+        sbi.save()
+    return redirect("/products")
+
+
+
+def show_basket(request):
+    # get the user object
+    # does a shopping basket exist ? -> your basket is empty
+    # load all shopping basket items
+    # display on page 
+    user = request.user
+    basket = Basket.objects.filter(user_id=user, is_active=True).first()
+    if basket is None:
+        #TODO: Show basket empty
+        return render(request, 'basket.html', {'empty':True})
+    else:
+        sbi = BasketItem.objects.filter(basket_id=basket)
+        # is this list empty ? 
+        if sbi.exists():
+            # normal flow
+            return render(request, 'basket.html', {'basket':basket, 'sbi':sbi})
+        else:
+            return render(request, 'basket.html', {'empty':True})
+
+
+def remove_item(request,sbi):
+    basketitem = BasketItem.objects.get(id=sbi)
+    if basketitem is None:
+        return redirect("/basket") # if error redirect to shopping basket
+    else:
+        if basketitem.quantity > 1:
+            basketitem.quantity = basketitem.quantity-1
+            basketitem.save() # save our changes to the db
+        else:
+            basketitem.delete() # delete the basket item
+    return redirect("/basket")
