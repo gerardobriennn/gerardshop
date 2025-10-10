@@ -120,3 +120,44 @@ def add_item(request,sbi):
         else:
             basketitem.quantity =+() # delete the basket item
     return redirect("/basket")
+
+
+
+def order(request):
+    # load in all data we need, user, basket, items
+    user = request.user
+    basket = Basket.objects.filter(user_id=user, is_active=True).first()
+    if basket is None:
+        return redirect("/")
+    sbi = BasketItem.objects.filter(basket_id=basket)
+    if not sbi.exists(): # if there are no items
+        return redirect("/")
+    # POST or GET
+    if request.method == "POST":
+        # check if valid
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.user_id = user
+            order.basket_id = basket
+            total = 0.0
+            for item in sbi:
+                total += float(item.item_price())
+            order.total_price = total
+            order.save()
+            basket.is_active = False
+            basket.save()
+            return render(request, 'ordercomplete.html', {'order':order, 'basket':basket, 'sbi':sbi})
+        else:
+            return render(request, 'orderform.html', {'form':form, 'basket':basket, 'sbi':sbi})
+    else:
+        # show the form
+        form = OrderForm()
+        return render(request, 'orderform.html', {'form':form, 'basket':basket, 'sbi':sbi})
+
+
+
+def previous_orders(request):
+    user = request.user
+    orders = Order.objects.filter(user_id=user)
+    return render(request, 'previous_orders.html', {'orders':orders})

@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Your Basket{% endblock %}
+{% block title %}Order Complete{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Shopping Basket</h2>
+<h2 class="mb-4 text-success">Thank you for your order!</h2>
+<p><a class="btn btn-info mb-3" href="/feedback">Leave feedback on your experience</a></p>
 
-{% if empty %}
-<p class="alert alert-info">Your shopping basket is empty</p>
-{% else %}
 <table class="table table-hover align-middle">
     <thead class="table-light">
         <tr>
@@ -15,7 +13,6 @@
             <th>Image</th>
             <th>Quantity</th>
             <th>Price</th>
-            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -25,14 +22,11 @@
             <td><img src="{{ item.product_id.product_image.url }}" class="img-thumbnail" style="max-width:100px;"></td>
             <td>{{ item.quantity }}</td>
             <td>€{{ item.item_price }}</td>
-            <td>
-                <a href="/removeitem/{{ item.id }}" class="btn btn-sm btn-danger">Remove</a>
-                <a href="/additem/{{ item.id }}" class="btn btn-sm btn-success">Add</a>
-            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="/order/" class="btn btn-primary">Proceed to Order</a>
-{% endif %}
+
+<p class="fw-bold">Shipping Address: {{ order.shipping_addr }}</p>
+<p class="fw-bold">Total Price: €{{ order.total_price }}</p>
 {% endblock %}

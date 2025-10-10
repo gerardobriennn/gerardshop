@@ -6,6 +6,7 @@ from .models import User
 from django.db import transaction
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Feedback
+from .models import *
 
 class UserSignupForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -29,3 +30,10 @@ class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
         exclude = []       
+
+
+class OrderForm(ModelForm):
+    shipping_addr = forms.CharField(label="Shipping Address",widget=forms.TextInput(attrs={'class': "aesthetic-windows-95-text-input", 'placeholder': 'Shipping address', 'id': 'ship-addr'}))
+    class Meta:
+        model = Order
+        fields = ['shipping_addr']

@@ -13,6 +13,8 @@ urlpatterns = [
    path('removeitem/<int:sbi>', views.remove_item, name="remove_basket"),
    path('additem/<int:sbi>', views.add_item, name="add_basket"),
    path('addbasket/<int:prodid>/', views.add_to_basket, name="add_basket"),
+   path('order/', views.order, name='order'),
+   path('orderhistory/', views.previous_orders, name="order_history"),
 ] 
 
 # this for adding indivudal products, above is to add all products to home pagepath('products/', views.all_products, name="products"),

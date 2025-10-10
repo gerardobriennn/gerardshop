@@ -1,31 +1,23 @@
 {% extends 'base.html' %}
 
-{% block title %}Hello world{% endblock %}
-
+{% block title %}Home{% endblock %}
 
 {% block content %}
-	GERARD WORKING WEBPAGE<!-- content specific to the homepage goes here --->
-<ul>
-    <a class="nav-link" href="/basket">Shopping basket</a>
-            {% for p in products  %}
-                <li>{{ p.name }} - €{{p.price}} - {{p.description}}</li>
-                
-                 <a href="/product/{{p.id}}">
-                    <a href="/product/{{p.id}}/">View</a>
-                     <img src="{{p.product_image.url}}" />
-                    {% if user.is_authenticated %}
-                        <a class="nav-link" href="#">Welcome, {{user.username}}</a>
-                        <a href = "/logout/" class="btn btn-primary">Logout</a>
-	                {%else%}
-	                <a href = "/login/" class="btn btn-primary">Login</a>
-	                <a href = "/register/" class="btn btn-primary">register</a>
-                    {%endif%}
-                </a>
-            {% endfor %}
-        </ul>
+<h2 class="mb-4 text-center">Welcome to Gerard's Game Shop!</h2>
 
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for p in products %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <img src="{{ p.product_image.url }}" class="card-img-top" alt="{{ p.name }}">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ p.name }}</h5>
+                <p class="card-text">{{ p.description }}</p>
+                <p class="fw-bold mt-auto">€{{ p.price }}</p>
+                <a href="/product/{{ p.id }}/" class="btn btn-primary w-100 mt-2">View / Buy</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}
-
-
-
-
