@@ -12,6 +12,7 @@ urlpatterns = [
    path('feedback/', views.feedback_form, name='feedback'),
    path('basket/', views.show_basket, name="show_basket"),
    path('removeitem/<int:sbi>', views.remove_item, name="remove_basket"),
+   path('additem/<int:sbi>', views.add_item, name="add_basket"),
    path('addbasket/<int:prodid>/', views.add_to_basket, name="add_basket"),
 ] 
 

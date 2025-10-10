@@ -111,3 +111,15 @@ def remove_item(request,sbi):
         else:
             basketitem.delete() # delete the basket item
     return redirect("/basket")
+
+def add_item(request,sbi):
+    basketitem = BasketItem.objects.get(id=sbi)
+    if basketitem is None:
+        return redirect("/basket") # if error redirect to shopping basket
+    else:
+        if basketitem.quantity >= 1:
+            basketitem.quantity = basketitem.quantity+1
+            basketitem.save() # save our changes to the db
+        else:
+            basketitem.quantity =+ 1() # delete the basket item
+    return redirect("/basket")

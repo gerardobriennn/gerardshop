@@ -6,15 +6,24 @@
 {% block content %}
 	GERARD WORKING WEBPAGE<!-- content specific to the homepage goes here --->
 <ul>
+    <a class="nav-link" href="/basket">Shopping basket</a>
             {% for p in products  %}
                 <li>{{ p.name }} - €{{p.price}} - {{p.description}}</li>
                 
                  <a href="/product/{{1}}">
                      <img src="{{p.product_image.url}}" />
+                    {% if user.is_authenticated %}
+                        <a class="nav-link" href="#">Welcome, {{user.username}}</a>
+                        <a href = "/logout/" class="btn btn-primary">Logout</a>
+	                {%else%}
+	                <a href = "/login/" class="btn btn-primary">Login</a>
+	                <a href = "/register/" class="btn btn-primary">register</a>
+                    {%endif%}
                 </a>
             {% endfor %}
         </ul>
-		<a href="/product/{{1}}/">View</a>
+		<a href="/product/{{prodid}}/">View</a>
+
 {% endblock %}
 
 
