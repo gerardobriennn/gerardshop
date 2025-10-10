@@ -7,9 +7,6 @@ from .forms import *
 from django.contrib.auth.views import LoginView
 
 
-def index(request):
-    products = Product.objects.all()
-    return render(request, 'index.html')
 # Create your views here.
 def all_products(request):
     products = Product.objects.all()
@@ -76,7 +73,7 @@ def add_to_basket(request, prodid):
         # just add 1 to the quantity
         sbi.quantity = sbi.quantity+1
         sbi.save()
-    return redirect("/products")
+    return redirect("/")
 
 
 
@@ -121,5 +118,5 @@ def add_item(request,sbi):
             basketitem.quantity = basketitem.quantity+1
             basketitem.save() # save our changes to the db
         else:
-            basketitem.quantity =+ 1() # delete the basket item
+            basketitem.quantity =+() # delete the basket item
     return redirect("/basket")

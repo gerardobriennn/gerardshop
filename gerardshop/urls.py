@@ -3,8 +3,7 @@ from . import views
 from .forms import *
 
 urlpatterns = [
-   path('', views.all_products, name="index"),
-   path('products/', views.all_products, name="products"),
+   path('', views.all_products, name="products"),
    path('product/<int:prodid>/', views.product_individual, name="individual_product"),
    path('register/', views.UserSignupView.as_view(), name="register"),
    path('login/', views.LoginView.as_view(template_name="login.html", authentication_form=UserLoginForm)),

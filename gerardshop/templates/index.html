@@ -10,7 +10,8 @@
             {% for p in products  %}
                 <li>{{ p.name }} - €{{p.price}} - {{p.description}}</li>
                 
-                 <a href="/product/{{1}}">
+                 <a href="/product/{{p.id}}">
+                    <a href="/product/{{p.id}}/">View</a>
                      <img src="{{p.product_image.url}}" />
                     {% if user.is_authenticated %}
                         <a class="nav-link" href="#">Welcome, {{user.username}}</a>
@@ -22,7 +23,6 @@
                 </a>
             {% endfor %}
         </ul>
-		<a href="/product/{{prodid}}/">View</a>
 
 {% endblock %}
 
